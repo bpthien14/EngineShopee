@@ -1,6 +1,6 @@
-import { gameThien, GameThien } from "./gameThien";
-import { directorThien, DirectorThienEvent } from "./directorThien";
-import { Scene } from "./scene";
+import { gameThien, GameThien } from "./gameThien.ts";
+import { directorThien, DirectorThienEvent } from "./directorThien.ts";
+import { Scene } from "./scene.ts";
 
 class DemoScene extends Scene {
   constructor() {

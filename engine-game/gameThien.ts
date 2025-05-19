@@ -1,5 +1,5 @@
-import { EventTargetThien } from "./eventTagret";
-import { directorThien, DirectorThien } from "./directorThien";
+import { EventTargetThien } from "./eventTagret.ts";
+import { directorThien, DirectorThien } from "./directorThien.ts";
 export const GameState = {
   UNINITED: 0,
   INITED: 1,
