@@ -1,18 +1,19 @@
-import { gameThien } from "./gameThien.es.js";
-import {
-  directorThien,
-  DirectorThienEvent,
-  Scene,
-} from "./directorThien.es.js";
+import { gameThien, GameThien } from "./gameThien";
+import { directorThien, DirectorThienEvent } from "./directorThien";
+import { Scene } from "./scene";
+
 class DemoScene extends Scene {
   constructor() {
     super("demo-scene");
   }
-  init() {
+  
+  init(): void {
     console.log("Demo scene initialized");
   }
-  update(dt) {}
-  render() {
+
+  update(dt: number): void {}
+  
+  render(): void {
     console.log("Rendering demo scene");
     if (gameThien.canvas) {
       const ctx = gameThien.canvas.getContext("2d");
@@ -30,12 +31,13 @@ class DemoScene extends Scene {
     }
   }
 }
-gameThien.on(gameThien.constructor.EVENT_FRAME_START, (deltaTime) => {});
+
+gameThien.on(GameThien.EVENT_FRAME_START, (deltaTime: number) => {});
 directorThien.on(DirectorThienEvent.BEFORE_UPDATE, () => {});
 directorThien.on(DirectorThienEvent.AFTER_UPDATE, () => {});
 document.addEventListener("DOMContentLoaded", () => {
   console.log("DOM loaded, initializing game with ES modules...");
-  const canvas = document.getElementById("game-canvas");
+  const canvas = document.getElementById("game-canvas") as HTMLCanvasElement;
   gameThien.init({
     frameRate: 60,
     showFPS: true,

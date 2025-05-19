@@ -1,7 +1,7 @@
-import { EventTargetThien } from "./eventTagret.es";
-import { Scheduler } from "./scheduler.es";
-import { System } from "./system.es";
-import { Scene } from "./scene.es";
+import { EventTargetThien } from "./eventTagret";
+import { Scheduler } from "./scheduler";
+import { System } from "./system";
+import { Scene } from "./scene";
 
 export const DirectorThienEvent = {
   INIT: "director_init",

@@ -1,12 +1,39 @@
-import { EventTargetThien } from "./eventTagret.es.js";
-import { directorThien, DirectorThien } from "./directorThien.es.js";
+import { EventTargetThien } from "./eventTagret";
+import { directorThien, DirectorThien } from "./directorThien";
 export const GameState = {
   UNINITED: 0,
   INITED: 1,
   RUNNING: 2,
   PAUSED: 3,
 };
+export interface GameConfig {
+  frameRate?: number;
+  showFPS?: boolean;
+  canvas?: HTMLCanvasElement;
+}
 export class GameThien extends EventTargetThien {
+  private static _instance: GameThien | null = null;
+  private _state: number;
+  private _frameRate: number;
+  _showFPS: boolean; 
+  private _canvas: HTMLCanvasElement | null;
+  private _director: DirectorThien;
+  private _frameTime: number;
+  private _startTime: number;
+  private _lastTime: number;
+  private _deltaTime: number;
+  private _totalTime: number;
+  private _frameCount: number;
+  private _fpsUpdateTime: number;
+  private _fps: number;
+  private _animationFrameId: number | null;
+  static readonly EVENT_GAME_INIT: string = "game_init";
+  static readonly EVENT_GAME_START: string = "game_start";
+  static readonly EVENT_GAME_PAUSE: string = "game_pause";
+  static readonly EVENT_GAME_RESUME: string = "game_resume";
+  static readonly EVENT_GAME_END: string = "game_end";
+  static readonly EVENT_FRAME_START: string = "frame_start";
+  static readonly EVENT_FRAME_END: string = "frame_end";
   constructor() {
     super();
     if (GameThien._instance) {
@@ -18,7 +45,7 @@ export class GameThien extends EventTargetThien {
     this._showFPS = false;
     this._canvas = null;
     this._director = directorThien;
-    this._frameTime = 1000 / 60;
+    this._frameTime = 1000 / 60; 
     this._startTime = 0;
     this._lastTime = 0;
     this._deltaTime = 0;
@@ -28,13 +55,13 @@ export class GameThien extends EventTargetThien {
     this._fps = 0;
     this._animationFrameId = null;
   }
-  static getInstance() {
+  static getInstance(): GameThien {
     if (!GameThien._instance) {
       GameThien._instance = new GameThien();
     }
     return GameThien._instance;
   }
-  init(config = {}) {
+  init(config: GameConfig = {}): void {
     if (this._state !== GameState.UNINITED) {
       console.warn("Game đã được khởi tạo rồi");
       return;
@@ -60,7 +87,7 @@ export class GameThien extends EventTargetThien {
     this.emit(GameThien.EVENT_GAME_INIT);
     console.log("Game initialized with frameRate =", this._frameRate);
   }
-  start() {
+  start(): void {
     if (this._state === GameState.RUNNING) {
       console.warn("Game is already running");
       return;
@@ -69,7 +96,7 @@ export class GameThien extends EventTargetThien {
     this.emit(GameThien.EVENT_GAME_START);
     this._startGameLoop();
   }
-  pause() {
+  pause(): void {
     if (this._state !== GameState.RUNNING) {
       console.warn("Game is not running");
       return;
@@ -81,7 +108,7 @@ export class GameThien extends EventTargetThien {
       this._animationFrameId = null;
     }
   }
-  resume() {
+  resume(): void {
     if (this._state !== GameState.PAUSED) {
       console.warn("Game is not paused");
       return;
@@ -91,7 +118,7 @@ export class GameThien extends EventTargetThien {
     this._lastTime = performance.now();
     this._startGameLoop();
   }
-  end() {
+  end(): void {
     if (this._state === GameState.UNINITED) {
       console.warn("Game has not been initialized");
       return;
@@ -103,10 +130,10 @@ export class GameThien extends EventTargetThien {
     this._state = GameState.UNINITED;
     this.emit(GameThien.EVENT_GAME_END);
   }
-  _startGameLoop() {
+  private _startGameLoop(): void {
     const gameLoop = () => {
       const currentTime = performance.now();
-      this._deltaTime = (currentTime - this._lastTime) / 1000;
+      this._deltaTime = (currentTime - this._lastTime) / 1000; 
       this._lastTime = currentTime;
       this._totalTime = (currentTime - this._startTime) / 1000;
       this._frameCount++;
@@ -129,28 +156,20 @@ export class GameThien extends EventTargetThien {
     };
     this._animationFrameId = requestAnimationFrame(gameLoop);
   }
-  get director() {
+  get director(): DirectorThien {
     return this._director;
   }
-  get fps() {
+  get fps(): number {
     return this._fps;
   }
-  get deltaTime() {
+  get deltaTime(): number {
     return this._deltaTime;
   }
-  get totalTime() {
+  get totalTime(): number {
     return this._totalTime;
   }
-  get canvas() {
+  get canvas(): HTMLCanvasElement | null {
     return this._canvas;
   }
 }
-GameThien._instance = null;
-GameThien.EVENT_GAME_INIT = "game_init";
-GameThien.EVENT_GAME_START = "game_start";
-GameThien.EVENT_GAME_PAUSE = "game_pause";
-GameThien.EVENT_GAME_RESUME = "game_resume";
-GameThien.EVENT_GAME_END = "game_end";
-GameThien.EVENT_FRAME_START = "frame_start";
-GameThien.EVENT_FRAME_END = "frame_end";
 export const gameThien = GameThien.getInstance();
